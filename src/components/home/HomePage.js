@@ -1,46 +1,38 @@
-import React, { useState, useEffect } from 'react'
-import Card from '../card/Card'
-import styles from './home.module.css'
-import axios from 'axios'
+import React from "react";
+import Card from "../card/Card";
+import styles from "./home.module.css";
+import useCharacters from "../../hooks/useCharacters";
 
-let URL = "https://rickandmortyapi.com/api"
+const Home = () => {
+  const {
+    isFetching,
+    errors,
+    current,
+    nextChar,
+    addToFavorite,
+  } = useCharacters();
 
-export default function Home() {
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.title}>Personajes de Rick y Morty</h1>
 
-    let [chars, setChars] = useState([])
+      {errors && <h2>Error al cargar: {errors}</h2>}
 
-    useEffect(() => {
-        getCharacters()
-    }, [])
+      {isFetching ? (
+        <h2>Cargando</h2>
+      ) : (
+        <>
+          {current?.id && (
+            <Card
+              leftClick={nextChar}
+              rightClick={() => addToFavorite(current)}
+              {...current}
+            />
+          )}
+        </>
+      )}
+    </div>
+  );
+};
 
-    function nextChar() {
-        chars.shift()
-        if (!chars.length) {
-            //get more characters
-        }
-        setChars([...chars])
-    }
-
-    function renderCharacter() {
-        let char = chars[0]
-        return (
-            <Card leftClick={nextChar} {...char} />
-        )
-    }
-
-    function getCharacters() {
-        return axios.get(`${URL}/character`)
-            .then(res => {
-                setChars(res.data.results)
-            })
-    }
-
-    return (
-        <div className={styles.container}>
-            <h2>Personajes de Rick y Morty</h2>
-            <div>
-                {renderCharacter()}
-            </div>
-        </div>
-    )
-}
+export default Home;
