@@ -80,3 +80,13 @@
 .actions .left:hover span {
   font-size: 7rem;
 }
+
+.deleteButton {
+  background-color: rgba(246, 36, 88, 0.893);
+  color: rgb(245, 245, 245);
+  font-size: 17px;
+  padding: 10px;
+  border: 0;
+  border-radius: 15px;
+  cursor: pointer;
+}

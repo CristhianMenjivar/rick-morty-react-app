@@ -1,6 +1,7 @@
 import React from "react";
 import useUser from "../../hooks/useUser";
 import styles from "./login.module.css";
+import Image from "../Image";
 
 export default function LoginPage() {
   const {
@@ -28,9 +29,9 @@ export default function LoginPage() {
                 <h2>{currentUser.displayName}</h2>
 
                 {currentUser.photoURL && (
-                  <img
+                  <Image
                     style={{ borderRadius: 50, width: 100, height: 100 }}
-                    src={currentUser.photoURL}
+                    url={currentUser.photoURL}
                     alt={currentUser.email}
                   />
                 )}
@@ -43,7 +44,6 @@ export default function LoginPage() {
       ) : (
         <React.Fragment>
           <button onClick={initGoogleLogin}>Inicia Sesión con Google</button>
-          <button>Iniciar</button>
         </React.Fragment>
       )}
     </div>

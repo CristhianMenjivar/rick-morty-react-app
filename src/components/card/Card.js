@@ -5,19 +5,21 @@ import PropTypes from "prop-types";
 
 export default function Card({
   isHide = false,
+  showButtonDelete = false,
   name,
   image,
   rightClick,
   leftClick,
+  onClickButtonDelete,
 }) {
-  const handlerLeftClick = async () => {
-    if (leftClick) {
-      const res = await leftClick();
-      if (!res?.status) {
-        console.log("No hay mas characters");
-      }
-    }
+  const handlerLeftClick = () => {
+    leftClick && leftClick();
   };
+
+  const handlerBottomClick = () => {
+    onClickButtonDelete && onClickButtonDelete();
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.card}>
@@ -33,6 +35,12 @@ export default function Card({
               <FontAwesome name="heart" size="2x" />
             </div>
           </div>
+        )}
+
+        {showButtonDelete && (
+          <button onClick={handlerBottomClick} className={styles.deleteButton}>
+            Delete from favorite
+          </button>
         )}
       </div>
     </div>

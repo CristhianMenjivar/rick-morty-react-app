@@ -2,15 +2,21 @@
 import * as Types from "./types";
 import * as TypesUser from "../user/types";
 
-const initialState = {
+export const initialState = {
   isFetching: true,
   chars: [],
-  current: {}, // personaje
   errors: null,
   // favorites data
   favoriteChars: [],
   isFetchingFavorites: true,
   errorsFavorite: null,
+  // pagination chars
+  infoChars: {
+    count: 0,
+    pages: 0,
+    next: 1,
+    prev: null, // or number,
+  },
 };
 
 const charsReducer = (state = initialState, action) => {
@@ -37,19 +43,20 @@ const charsReducer = (state = initialState, action) => {
         isFetchingFavorites: false,
         errorsFavorite: action.payload,
       };
+    case Types.DELETE_CHARACTER:
+      return {
+        ...state,
+        chars: action.payload,
+      };
     case Types.DELETE_FROM_FAVORITE:
       return {
         ...state,
-        favoriteChars: state.favoriteChars.filter(
-          (f) => f.id !== action.payload.id
-        ),
+        favoriteChars: action.payload,
       };
     case Types.ADD_TO_FAVORITE:
       return {
         ...state,
-        favoriteChars: action.payload.favoriteChars,
-        chars: action.payload.chars,
-        current: action.payload?.chars[0] || null,
+        favoriteChars: action.payload,
       };
     case Types.GET_CHARACTER_FETCH:
       return {
@@ -61,19 +68,14 @@ const charsReducer = (state = initialState, action) => {
       return {
         ...state,
         isFetching: false,
-        chars: action.payload,
-        current: action.payload[0] || {},
+        chars: action.payload.chars,
+        infoChars: action.payload.info,
       };
     case Types.GET_CHARACTER_ERROR:
       return {
         ...state,
         isFetching: false,
         errors: action.payload,
-      };
-    case Types.SET_CURRENT_CHAR:
-      return {
-        ...state,
-        current: action.payload,
       };
 
     default:

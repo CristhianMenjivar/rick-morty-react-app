@@ -4,10 +4,22 @@ import Card from "../card/Card";
 import useCharacters from "../../hooks/useCharacters";
 
 export default function FavPage() {
-  const { favoriteChars = [], isFetchingFavorites } = useCharacters();
+  const {
+    favoriteChars = [],
+    isFetchingFavorites,
+    deleteFromFavorite,
+  } = useCharacters();
 
-  const renderCharacter = (char) => {
-    return <Card isHide {...char} key={char.id} />;
+  const renderCharacter = (char, index) => {
+    return (
+      <Card
+        isHide
+        showButtonDelete
+        onClickButtonDelete={() => deleteFromFavorite(char)}
+        {...char}
+        key={index}
+      />
+    );
   };
   return (
     <>

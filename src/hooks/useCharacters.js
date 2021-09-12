@@ -3,21 +3,26 @@ import { shallowEqual } from "react-redux";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
-  // getCharacters,
-  setCurrentChar,
   addToFavoriteCharacter,
   deleteFromFavoriteCharacter,
+  deleteCharacter,
   getAllFavorites,
 } from "../redux/chars/actions";
 
 const useCharacters = () => {
   const state = useSelector((state) => state.characters, shallowEqual);
+  const { chars = [] } = state;
+
+  const current = chars?.length ? chars[0] : null;
 
   const dispatch = useDispatch();
 
-  //  const getAllCharacters = useCallback(() => {
-  //    dispatch(getCharacters());
-  //  }, [dispatch]);
+  const nextChar = useCallback(async () => {
+    chars.shift();
+    dispatch(deleteCharacter([...chars]));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, chars]);
 
   const getFavoritesCharacters = useCallback(() => {
     dispatch(getAllFavorites());
@@ -26,8 +31,9 @@ const useCharacters = () => {
   const addToFavorite = useCallback(
     (char) => {
       dispatch(addToFavoriteCharacter(char));
+      nextChar();
     },
-    [dispatch]
+    [dispatch, nextChar]
   );
 
   const deleteFromFavorite = useCallback(
@@ -37,31 +43,9 @@ const useCharacters = () => {
     [dispatch]
   );
 
-  const nextChar = async () => {
-    const { chars = [] } = state;
-    const currentIndex = chars.findIndex((c) => c.id === state.current?.id);
-    if (!chars.length > 0)
-      return {
-        status: false,
-      };
-
-    const nextChar = chars[currentIndex + 1];
-    if (!nextChar) {
-      await dispatch(setCurrentChar(null));
-      return {
-        status: false,
-      };
-    }
-
-    await dispatch(setCurrentChar(nextChar));
-
-    return {
-      status: true,
-    };
-  };
-
   return {
     ...state,
+    current,
     nextChar,
     addToFavorite,
     deleteFromFavorite,

@@ -19,7 +19,15 @@ export const getAllFavoritesFromDB = async (uid) => {
   try {
     const res = await dbFirebase.doc(uid).get();
 
-    const { favorites = [] } = res.data();
+    const getData = res.data();
+
+    if (!getData?.favorites) {
+      return {
+        favorites: [],
+      };
+    }
+
+    const { favorites = [] } = getData;
 
     return {
       favorites,
